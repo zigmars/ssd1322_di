@@ -4,10 +4,10 @@ use core::convert::TryInto;
 use crate::command::Command;
 use display_interface::{DataFormat::U8, DisplayError, WriteOnlyDataCommand};
 use embedded_graphics::{
-    draw_target::DrawTarget, geometry::OriginDimensions, pixelcolor::Gray4, prelude::*, Pixel,
+    draw_target::DrawTarget, geometry::OriginDimensions, pixelcolor::{Gray4,GrayColor}, prelude::Size, Pixel,
 };
-use embedded_hal::blocking::delay::DelayMs;
-use embedded_hal::digital::v2::OutputPin;
+use embedded_hal::delay::DelayNs;
+use embedded_hal::digital::OutputPin;
 
 const DISPLAY_WIDTH: usize = 256;
 const DISPLAY_HEIGHT: usize = 64;
@@ -50,7 +50,7 @@ impl<DI: WriteOnlyDataCommand> Ssd1322<DI> {
     ) -> Result<(), DisplayError>
     where
         RST: OutputPin,
-        DELAY: DelayMs<u8>,
+        DELAY: DelayNs,
     {
         rst.set_low().map_err(|_| DisplayError::BusWriteError)?;
         delay.delay_ms(10);
